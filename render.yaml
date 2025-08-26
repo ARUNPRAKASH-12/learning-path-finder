@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: learning-path-finder-backend
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: true

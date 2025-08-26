@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-// Since we have a proxy configured in package.json, we don't need a baseURL
-// The proxy will handle routing to the backend
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const axiosInstance = axios.create({
+    baseURL: API_BASE_URL,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
