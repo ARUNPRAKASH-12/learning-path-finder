@@ -42,24 +42,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// CORS middleware - Simple and permissive for cross-device compatibility
-app.use(cors({
-  origin: true, // Allow all origins for now
-  credentials: false,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
-  ],
-  exposedHeaders: ['Authorization'],
-  optionsSuccessStatus: 200,
-  preflightContinue: false
-}));
+// CORS middleware - Allow all origins for deployment
+app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
