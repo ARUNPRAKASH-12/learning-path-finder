@@ -9,10 +9,12 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    timeout: 30000, // 30 second timeout for slow mobile connections
+    timeout: 30000,
     validateStatus: function (status) {
-        return status < 500; // Accept any status less than 500
-    }
+        return status < 500;
+    },
+    // Important for mobile compatibility
+    withCredentials: false
 });
 
 // Token management for requests
@@ -48,6 +50,19 @@ axiosInstance.interceptors.response.use(
 );
 
 const api = {
+    // Test endpoint
+    test: async () => {
+        try {
+            console.log('API: Testing connection to:', API_BASE_URL);
+            const response = await axiosInstance.get('/');
+            console.log('API: Test response:', response.data);
+            return response;
+        } catch (error) {
+            console.error('API: Test error:', error);
+            throw error;
+        }
+    },
+    
     // Auth endpoints
     login: async (credentials) => {
         try {

@@ -44,56 +44,12 @@ export const AuthProvider = ({ children }) => {
     user: null,
     token: null,
     isAuthenticated: false,
-    loading: true
+    loading: false
   });
 
+  // No localStorage initialization - start fresh each time
   useEffect(() => {
-    // Check for existing authentication from localStorage
-    const initializeAuth = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        const userData = localStorage.getItem('userData');
-        
-        if (token && userData) {
-          const user = JSON.parse(userData);
-          console.log('Restoring user session:', user);
-          
-          // Set the token for API requests
-          setAuthToken(token);
-          
-          // Verify token is still valid by making a test API call
-          try {
-            // Use getUserAnalytics as it always returns data even for new users
-            const response = await api.getUserAnalytics();
-            console.log('Token validation successful');
-            
-            dispatch({
-              type: 'LOGIN_SUCCESS',
-              payload: {
-                user,
-                token
-              }
-            });
-          } catch (error) {
-            console.log('Token expired or invalid, clearing stored data');
-            localStorage.removeItem('token');
-            localStorage.removeItem('userData');
-            clearAuthToken();
-          }
-        } else {
-          console.log('No stored authentication found');
-        }
-      } catch (error) {
-        console.error('Error initializing auth:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('userData');
-        clearAuthToken();
-      } finally {
-        dispatch({ type: 'SET_LOADING', payload: false });
-      }
-    };
-    
-    initializeAuth();
+    dispatch({ type: 'SET_LOADING', payload: false });
   }, []);
 
   const login = async (email, password) => {
@@ -104,23 +60,18 @@ export const AuthProvider = ({ children }) => {
       
       const res = await api.login({ email, password });
       
-      console.log('Login response:', res.data);
+      console.log('Login response:', res);
 
-      if (res.data.success) {
+      if (res.data && res.data.success) {
         const { token, ...userData } = res.data.data;
         
-        // Ensure user has both id and _id for compatibility
         const user = {
           ...userData,
-          id: userData._id || userData.id, // Use _id as id for compatibility
+          id: userData._id || userData.id,
           _id: userData._id || userData.id
         };
         
-        console.log('Processed user data:', user);
-        
-        // Store token and user data in localStorage for persistence
-        localStorage.setItem('token', token);
-        localStorage.setItem('userData', JSON.stringify(user));
+        console.log('Login successful, user data:', user);
         
         dispatch({
           type: 'LOGIN_SUCCESS',
@@ -138,19 +89,20 @@ export const AuthProvider = ({ children }) => {
         dispatch({ type: 'SET_LOADING', payload: false });
         return {
           success: false,
-          message: res.data.message || 'Login failed'
+          message: res.data?.message || 'Login failed'
         };
       }
     } catch (error) {
       console.error('Login error details:', {
         message: error.message,
         response: error.response?.data,
-        status: error.response?.status
+        status: error.response?.status,
+        fullError: error
       });
       dispatch({ type: 'SET_LOADING', payload: false });
       return {
         success: false,
-        message: error.response?.data?.message || 'Login failed'
+        message: error.response?.data?.message || error.message || 'Login failed'
       };
     }
   };
@@ -163,22 +115,18 @@ export const AuthProvider = ({ children }) => {
       
       const res = await api.register({ name, email, password });
       
-      console.log('Registration response:', res.data);
+      console.log('Registration response:', res);
 
-      if (res.data.success) {
+      if (res.data && res.data.success) {
         const { token, ...userData } = res.data.data;
         
-        // Ensure user has both id and _id for compatibility
         const user = {
           ...userData,
-          id: userData._id || userData.id, // Use _id as id for compatibility
+          id: userData._id || userData.id,
           _id: userData._id || userData.id
         };
         
-        console.log('Processed registration user data:', user);
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('userData', JSON.stringify(user));
+        console.log('Registration successful, user data:', user);
         
         dispatch({
           type: 'LOGIN_SUCCESS',
@@ -188,34 +136,34 @@ export const AuthProvider = ({ children }) => {
           }
         });
         
+        // Set the token for API requests
+        setAuthToken(token);
+        
         return { success: true };
       } else {
         dispatch({ type: 'SET_LOADING', payload: false });
         return {
           success: false,
-          message: res.data.message || 'Registration failed'
+          message: res.data?.message || 'Registration failed'
         };
       }
     } catch (error) {
       console.error('Registration error details:', {
         message: error.message,
         response: error.response?.data,
-        status: error.response?.status
+        status: error.response?.status,
+        fullError: error
       });
       dispatch({ type: 'SET_LOADING', payload: false });
       return {
         success: false,
-        message: error.response?.data?.message || 'Registration failed'
+        message: error.response?.data?.message || error.message || 'Registration failed'
       };
     }
   };
 
   const logout = () => {
-    console.log('Logging out user:', state.user?.id);
-    
-    // Clear localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('userData');
+    console.log('Logging out user');
     
     // Clear API token
     clearAuthToken();
@@ -227,19 +175,11 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (userData) => {
     console.log('Updating user in context:', userData);
     
-    // Update context state
+    // Update context state only
     dispatch({
       type: 'UPDATE_USER',
       payload: userData
     });
-    
-    // Update localStorage with new user data
-    const updatedUser = {
-      ...state.user,
-      ...userData
-    };
-    localStorage.setItem('userData', JSON.stringify(updatedUser));
-    console.log('User data updated in localStorage:', updatedUser);
   };
 
   return (

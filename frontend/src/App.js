@@ -14,6 +14,7 @@ import ResourceView from './components/Learning/ResourceView';
 import LearningPath from './components/Learning/LearningPath';
 import CompletedCourses from './components/CompletedCourses';
 import Feedback from './components/Feedback';
+import ApiTest from './components/Debug/ApiTest';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
@@ -26,6 +27,7 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/api-test" element={<ApiTest />} />
             <Route
               path="/dashboard"
               element={
