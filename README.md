@@ -7,7 +7,6 @@ A personalized learning platform that creates customized learning paths using AI
 - **Personalized Learning Paths**: AI-generated custom learning plans
 - **Progress Tracking**: Monitor your learning journey
 - **Skill Assessment**: Evaluate your current skill level
-- **Certificate Generation**: Earn certificates upon completion
 - **Resource Recommendations**: Curated learning materials
 - **Interactive Dashboard**: Track progress and manage learning
 
@@ -18,7 +17,6 @@ A personalized learning platform that creates customized learning paths using AI
 - **MongoDB** with Mongoose
 - **JWT** Authentication
 - **Google Gemini AI** for content generation
-- **Puppeteer** for PDF generation
 
 ### Frontend
 - **React.js** with React Router
@@ -114,7 +112,7 @@ npm start
 3. Complete the initial skill assessment
 4. Select your learning domain and goals
 5. Follow your personalized learning path
-6. Track progress and earn certificates
+6. Track progress and complete your learning journey
 
 ## 📁 Project Structure
 
@@ -148,11 +146,6 @@ learning-path-finder/
 - `GET /api/paths` - Get user learning paths
 - `POST /api/paths` - Create new learning path
 - `PUT /api/paths/:id` - Update learning path
-
-### Certificates
-- `POST /api/certificates/generate` - Generate certificate
-- `GET /api/certificates` - Get user certificates
-- `GET /api/certificates/:id/pdf` - Download certificate PDF
 
 ## 🤝 Contributing
 

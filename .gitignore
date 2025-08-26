@@ -73,11 +73,6 @@ Thumbs.db
 tmp/
 temp/
 
-# Generated certificates (for development)
-*.pdf
-*.png
-certificate-*.html
-
 # Backup files
 *.backup
 *.bak
