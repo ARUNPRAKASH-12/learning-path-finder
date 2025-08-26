@@ -43,7 +43,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // CORS middleware - Allow all origins for deployment
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  credentials: false
+}));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -55,7 +60,11 @@ app.use('/api/assessment', assessmentRoutes);
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ message: 'Learning Path Finder API is running!' });
+  res.json({ 
+    message: 'Learning Path Finder API is running!',
+    timestamp: new Date().toISOString(),
+    corsEnabled: true
+  });
 });
 
 const PORT = process.env.PORT || 5000;
