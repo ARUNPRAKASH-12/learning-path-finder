@@ -24,17 +24,7 @@ const app = express();
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  
-  // Log body for POST requests
-  if (req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString();
-    });
-    req.on('end', () => {
-      console.log('Raw body:', body);
-    });
-  }
+  console.log('Origin:', req.get('origin'));
   next();
 });
 
