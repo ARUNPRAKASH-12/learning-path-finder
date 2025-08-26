@@ -32,6 +32,13 @@ A personalized learning platform that creates customized learning paths using AI
 - MongoDB database
 - Google Gemini API key
 
+### Getting Your Gemini API Key:
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Create a new API key
+4. Copy the API key (it will look like: `AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`)
+5. Add it to your `.env` file as `GEMINI_API_KEY=YOUR_COPIED_KEY`
+
 ## 🚀 Installation
 
 ### Backend Setup
@@ -51,9 +58,19 @@ Create a `.env` file in the backend directory with:
 ```env
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
-GEMINI_API_KEY=your_gemini_api_key
+MONGODB_URI=mongodb://localhost:27017/learning-path-finder
+JWT_SECRET=your_super_secret_jwt_key_here
+GEMINI_API_KEY=YOUR_ACTUAL_GEMINI_API_KEY_HERE
+CLIENT_URL=http://localhost:3000
+```
+
+**Example .env file:**
+```env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/learning-path-finder
+JWT_SECRET=mySecretKey123!@#
+GEMINI_API_KEY=AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 CLIENT_URL=http://localhost:3000
 ```
 
@@ -76,6 +93,11 @@ npm install
 
 3. Configure environment variables:
 Create a `.env` file in the frontend directory with:
+```env
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+**Example frontend .env file:**
 ```env
 REACT_APP_API_URL=http://localhost:5000/api
 ```
