@@ -30,18 +30,28 @@ const ApiTest = () => {
     setLoading(true);
     const testUser = {
       name: 'Mobile Test User',
-      email: `test${Date.now()}@example.com`,
+      email: `mobiletest${Date.now()}@example.com`,
       password: 'testpass123'
     };
     
+    addResult('Registration Test - Starting', { user: testUser, userAgent: navigator.userAgent }, true);
+    
     try {
+      console.log('ApiTest: About to call api.register with:', testUser);
       const response = await api.register(testUser);
-      addResult('Registration Test', { status: response.status, data: response.data }, true);
+      addResult('Registration Test - Success', { 
+        status: response.status, 
+        data: response.data,
+        headers: response.headers 
+      }, true);
     } catch (error) {
-      addResult('Registration Test', { 
+      console.error('ApiTest: Registration failed:', error);
+      addResult('Registration Test - Failed', { 
         error: error.message, 
         status: error.response?.status,
-        data: error.response?.data 
+        data: error.response?.data,
+        networkError: error.code,
+        userAgent: navigator.userAgent
       }, false);
     }
     setLoading(false);
