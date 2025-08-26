@@ -6,7 +6,12 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://learning-path-fin
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    timeout: 30000, // 30 second timeout for slow mobile connections
+    validateStatus: function (status) {
+        return status < 500; // Accept any status less than 500
     }
 });
 
@@ -44,8 +49,40 @@ axiosInstance.interceptors.response.use(
 
 const api = {
     // Auth endpoints
-    login: (credentials) => axiosInstance.post('/api/auth/login', credentials),
-    register: (userData) => axiosInstance.post('/api/auth/register', userData),
+    login: async (credentials) => {
+        try {
+            console.log('API: Attempting login with baseURL:', API_BASE_URL);
+            const response = await axiosInstance.post('/api/auth/login', credentials);
+            console.log('API: Login response status:', response.status);
+            console.log('API: Login response data:', response.data);
+            return response;
+        } catch (error) {
+            console.error('API: Login error:', error);
+            console.error('API: Login error response:', error.response?.data);
+            console.error('API: Login error status:', error.response?.status);
+            throw error;
+        }
+    },
+    register: async (userData) => {
+        try {
+            console.log('API: Attempting registration with baseURL:', API_BASE_URL);
+            console.log('API: Registration data:', userData);
+            const response = await axiosInstance.post('/api/auth/register', userData);
+            console.log('API: Registration response status:', response.status);
+            console.log('API: Registration response data:', response.data);
+            return response;
+        } catch (error) {
+            console.error('API: Registration error:', error);
+            console.error('API: Registration error response:', error.response?.data);
+            console.error('API: Registration error status:', error.response?.status);
+            console.error('API: Full error object:', {
+                message: error.message,
+                code: error.code,
+                config: error.config
+            });
+            throw error;
+        }
+    },
     
     // Domain analysis
     analyzeDomain: (domain) => axiosInstance.post('/api/ai/analyze-domain', { domain }),
