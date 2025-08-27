@@ -50,19 +50,6 @@ axiosInstance.interceptors.response.use(
 );
 
 const api = {
-    // Test endpoint
-    test: async () => {
-        try {
-            console.log('API: Testing connection to:', API_BASE_URL);
-            const response = await axiosInstance.get('/');
-            console.log('API: Test response:', response.data);
-            return response;
-        } catch (error) {
-            console.error('API: Test error:', error);
-            throw error;
-        }
-    },
-    
     // Auth endpoints
     login: async (credentials) => {
         try {
@@ -80,28 +67,16 @@ const api = {
     },
     register: async (userData) => {
         try {
-            console.log('API: Starting registration process...');
             console.log('API: Attempting registration with baseURL:', API_BASE_URL);
             console.log('API: Registration data:', userData);
-            console.log('API: User agent:', navigator.userAgent);
-            console.log('API: Current URL:', window.location.href);
-            
             const response = await axiosInstance.post('/api/auth/register', userData);
             console.log('API: Registration response status:', response.status);
             console.log('API: Registration response data:', response.data);
             return response;
         } catch (error) {
-            console.error('API: Registration error occurred');
             console.error('API: Registration error:', error);
             console.error('API: Registration error response:', error.response?.data);
             console.error('API: Registration error status:', error.response?.status);
-            console.error('API: Registration error message:', error.message);
-            console.error('API: Full error object:', {
-                message: error.message,
-                code: error.code,
-                name: error.name,
-                stack: error.stack
-            });
             throw error;
         }
     },
